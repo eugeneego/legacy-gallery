@@ -1,0 +1,6 @@
+language: objective-c
+osx_image: xcode10.2
+branches:
+  only:
+    - master
+script: set -o pipefail && xcodebuild build -project LegacyGallery.xcodeproj | xcpretty
