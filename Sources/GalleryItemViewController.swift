@@ -15,8 +15,8 @@ public struct GalleryControls: OptionSet {
         self.rawValue = rawValue
     }
 
-    public static let close = GalleryControls(rawValue: 1)
-    public static let share = GalleryControls(rawValue: 2)
+    public static let close: GalleryControls = GalleryControls(rawValue: 1)
+    public static let share: GalleryControls = GalleryControls(rawValue: 2)
 }
 
 open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDelegate {
