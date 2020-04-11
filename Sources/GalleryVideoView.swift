@@ -12,7 +12,7 @@ import AVFoundation
 open class GalleryVideoView: UIView {
     open var player: AVPlayer? {
         get {
-            return videoLayer.player
+            videoLayer.player
         }
         set {
             videoLayer.player = newValue
@@ -26,6 +26,6 @@ open class GalleryVideoView: UIView {
     }
 
     open override class var layerClass: AnyClass {
-        return AVPlayerLayer.self
+        AVPlayerLayer.self
     }
 }

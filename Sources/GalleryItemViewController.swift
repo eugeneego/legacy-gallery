@@ -50,19 +50,19 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
     }
 
     open override var prefersStatusBarHidden: Bool {
-        return statusBarHidden
+        statusBarHidden
     }
 
     open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return statusBarStyle
+        statusBarStyle
     }
 
     open override var shouldAutorotate: Bool {
-        return true
+        true
     }
 
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .all
+        .all
     }
 
     // MARK: - Controls
@@ -76,7 +76,7 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
     internal var statusBarHidden: Bool = false
 
     open var isShareAvailable: Bool {
-        return false
+        false
     }
 
     open var topInset: CGFloat {
@@ -268,11 +268,11 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
     }
 
     open var zoomTransition: GalleryZoomTransition? {
-        return transition
+        transition
     }
 
     open var zoomTransitionInteractionController: UIViewControllerInteractiveTransitioning? {
-        return transition.interactive ? transition : nil
+        transition.interactive ? transition : nil
     }
 
     open var zoomTransitionAnimatingView: UIView? {

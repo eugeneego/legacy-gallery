@@ -187,7 +187,7 @@ open class GalleryVideoViewController: GalleryItemViewController {
     // MARK: - Controls
 
     open override var isShareAvailable: Bool {
-        return url?.isFileURL ?? false
+        url?.isFileURL ?? false
     }
 
     open override func closeTap() {

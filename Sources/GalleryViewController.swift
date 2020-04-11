@@ -120,19 +120,19 @@ open class GalleryViewController: UIPageViewController, UIPageViewControllerData
     }
 
     override open var prefersStatusBarHidden: Bool {
-        return sharedControls ? statusBarHidden : currentViewController.prefersStatusBarHidden
+        sharedControls ? statusBarHidden : currentViewController.prefersStatusBarHidden
     }
 
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        return statusBarStyle
+        statusBarStyle
     }
 
     override open var shouldAutorotate: Bool {
-        return true
+        true
     }
 
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .all
+        .all
     }
 
     open var topInset: CGFloat {
@@ -302,7 +302,7 @@ open class GalleryViewController: UIPageViewController, UIPageViewControllerData
     }
 
     open func pageViewControllerSupportedInterfaceOrientations(_ pageViewController: UIPageViewController) -> UIInterfaceOrientationMask {
-        return .all
+        .all
     }
 
     // MARK: - Transition

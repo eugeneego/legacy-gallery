@@ -51,7 +51,7 @@ open class GalleryZoomTransition: NSObject,
     // MARK: - Non interactive transition
 
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return zoomDuration
+        zoomDuration
     }
 
     open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
