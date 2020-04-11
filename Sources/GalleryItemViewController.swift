@@ -43,6 +43,8 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
     open override func viewDidLoad() {
         super.viewDidLoad()
 
+        modalPresentationStyle = .fullScreen
+
         extendedLayoutIncludesOpaqueBars = true
         automaticallyAdjustsScrollViewInsets = false
 
@@ -233,7 +235,7 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
             self?.close()
         }
         transition.shouldStartInteractiveTransition = { [weak self] in
-            guard let `self` = self else { return true }
+            guard let self = self else { return true }
 
             let orientation: UInt = 1 << UIApplication.shared.statusBarOrientation.rawValue
             let supportedOrientations = self.presenterInterfaceOrientations?()
@@ -254,7 +256,7 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
             self?.view
         }
         transition.completion = { [weak self] _ in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
 
             self.transition.interactive = false
             self.isTransitioning = false

@@ -120,7 +120,7 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
             loadingIndicatorView.startAnimating()
 
             videoLoader { [weak self] result in
-                guard let `self` = self else { return }
+                guard let self = self else { return }
 
                 self.loadingIndicatorView.stopAnimating()
 
@@ -194,7 +194,7 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
             mediaSize = previewImage.size
         } else if let previewImageLoader = video.previewImageLoader {
             previewImageLoader(.zero) { [weak self] result in
-                guard let `self` = self else { return }
+                guard let self = self else { return }
 
                 switch result {
                     case .success(let image):

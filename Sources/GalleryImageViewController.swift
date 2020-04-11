@@ -142,7 +142,7 @@ open class GalleryImageViewController: GalleryItemViewController, UIScrollViewDe
         loadingIndicatorView.startAnimating()
 
         fullImageLoader { [weak self] result in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
 
             self.loadingIndicatorView.stopAnimating()
 
@@ -153,7 +153,9 @@ open class GalleryImageViewController: GalleryItemViewController, UIScrollViewDe
                     self.imageView.image = image
 
                     let size = image.size
-                    let equal = abs(self.mediaSize.width - size.width) < 0.1 && abs(self.mediaSize.height - size.height) < 0.1
+                    let widthDiff = abs(self.mediaSize.width - size.width)
+                    let heightDiff = abs(self.mediaSize.height - size.height)
+                    let equal = widthDiff < 0.1 && heightDiff < 0.1
                     if !equal {
                         self.mediaSize = size
                         self.scrollSize = self.scrollView.frame.size

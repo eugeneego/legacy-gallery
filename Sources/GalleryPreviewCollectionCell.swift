@@ -85,7 +85,7 @@ open class GalleryPreviewCollectionCell: GalleryBasePreviewCollectionCell {
             imageView.image = image
         } else if let loader = loader {
             loader(imageView.bounds.size) { [weak self] result in
-                guard let `self` = self, self.imageId == uuid else { return }
+                guard let self = self, self.imageId == uuid else { return }
 
                 switch result {
                     case .success(let image):

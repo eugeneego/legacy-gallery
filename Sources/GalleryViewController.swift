@@ -50,6 +50,7 @@ open class GalleryViewController: UIPageViewController, UIPageViewControllerData
         let options: [UIPageViewController.OptionsKey: Any] = [ .interPageSpacing: spacing ]
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: options)
 
+        modalPresentationStyle = .fullScreen
         dataSource = self
         delegate = self
     }
@@ -57,6 +58,7 @@ open class GalleryViewController: UIPageViewController, UIPageViewControllerData
     required public init?(coder: NSCoder) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
+        modalPresentationStyle = .fullScreen
         dataSource = self
         delegate = self
     }
@@ -227,7 +229,7 @@ open class GalleryViewController: UIPageViewController, UIPageViewControllerData
         }
         controller.initialControlsVisibility = controls
         controller.controlsVisibilityChanged = { [weak self] controlsVisibility in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
 
             self.showControls(controlsVisibility, animated: true)
             self.controlsVisibilityChanged?(controlsVisibility)
