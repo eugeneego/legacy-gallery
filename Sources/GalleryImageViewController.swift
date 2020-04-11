@@ -124,7 +124,7 @@ open class GalleryImageViewController: GalleryItemViewController, UIScrollViewDe
     // MARK: - Controls
 
     open override var isShareAvailable: Bool {
-        return fullImage != nil
+        fullImage != nil
     }
 
     open override func shareTap() {
@@ -216,7 +216,7 @@ open class GalleryImageViewController: GalleryItemViewController, UIScrollViewDe
     // MARK: - Scroll View
 
     open func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
+        imageView
     }
 
     open func scrollViewDidZoom(_ scrollView: UIScrollView) {

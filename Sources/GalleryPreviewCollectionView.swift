@@ -70,7 +70,7 @@ open class GalleryPreviewCollectionView: UICollectionView, UICollectionViewDataS
     // MARK: - Collection View
 
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        items.count
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

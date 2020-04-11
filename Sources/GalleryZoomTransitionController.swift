@@ -42,7 +42,7 @@ open class GalleryZoomTransitionController: NSObject, UIViewControllerTransition
     open func interactionControllerForPresentation(
         using animator: UIViewControllerAnimatedTransitioning
     ) -> UIViewControllerInteractiveTransitioning? {
-        return nil
+        nil
     }
 
     open func interactionControllerForDismissal(
