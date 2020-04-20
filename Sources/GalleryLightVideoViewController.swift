@@ -11,7 +11,7 @@ import AVFoundation
 
 open class GalleryLightVideoViewController: GalleryItemViewController {
     public let video: GalleryMedia.Video
-    private var url: URL?
+    private var source: GalleryMedia.VideoSource?
     private var previewImage: UIImage?
 
     open var loop: Bool = true
@@ -27,7 +27,7 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
 
     public init(video: GalleryMedia.Video) {
         self.video = video
-        url = video.url
+        source = video.source
         previewImage = video.previewImage
 
         super.init(nibName: nil, bundle: nil)
@@ -114,8 +114,8 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
     // MARK: - Logic
 
     private func load() {
-        if let url = url {
-            load(url: url)
+        if let source = source {
+            load(source: source)
         } else if let videoLoader = video.videoLoader {
             loadingIndicatorView.startAnimating()
 
@@ -125,8 +125,8 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
                 self.loadingIndicatorView.stopAnimating()
 
                 switch result {
-                    case .success(let url):
-                        self.load(url: url)
+                    case .success(let source):
+                        self.load(source: source)
                     case .failure:
                         break
                 }
@@ -134,10 +134,19 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
         }
     }
 
-    private func load(url: URL) {
-        self.url = url
+    private func load(source: GalleryMedia.VideoSource) {
+        self.source = source
 
-        let player = AVPlayer(url: url)
+        let player: AVPlayer
+        switch source {
+            case .url(let url):
+                player = AVPlayer(url: url)
+            case .asset(let asset):
+                player = AVPlayer(playerItem: AVPlayerItem(asset: asset))
+            case .playerItem(let playerItem):
+                player = AVPlayer(playerItem: playerItem)
+        }
+
         player.actionAtItemEnd = .none
         videoView.player = player
 
@@ -233,8 +242,21 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
 
     // MARK: - Controls
 
+    open var sourceUrl: URL? {
+        switch source {
+            case .url(let url):
+                return url
+            case .asset(let asset):
+                return (asset as? AVURLAsset)?.url
+            case .playerItem(let playerItem):
+                return (playerItem.asset as? AVURLAsset)?.url
+            case nil:
+                return nil
+        }
+    }
+
     open override var isShareAvailable: Bool {
-        url?.isFileURL ?? false
+        sourceUrl?.isFileURL ?? false
     }
 
     open override func closeTap() {
@@ -245,9 +267,9 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
     }
 
     open override func shareTap() {
-        guard let url = url else { return }
+        guard let sourceUrl = sourceUrl else { return }
 
-        let controller = UIActivityViewController(activityItems: [ url ], applicationActivities: nil)
+        let controller = UIActivityViewController(activityItems: [sourceUrl], applicationActivities: nil)
         present(controller, animated: true, completion: nil)
     }
 

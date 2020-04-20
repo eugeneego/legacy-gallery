@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 public enum GalleryMedia {
     case image(Image)
@@ -14,7 +15,13 @@ public enum GalleryMedia {
 
     public typealias PreviewImageLoader = (_ size: CGSize, _ completion: @escaping (Result<UIImage, Error>) -> Void) -> Void
     public typealias FullImageLoader = (_ completion: @escaping (Result<UIImage, Error>) -> Void) -> Void
-    public typealias VideoLoader = (_ completion: @escaping (Result<URL, Error>) -> Void) -> Void
+    public typealias VideoLoader = (_ completion: @escaping (Result<VideoSource, Error>) -> Void) -> Void
+
+    public enum VideoSource {
+        case url(URL)
+        case asset(AVAsset)
+        case playerItem(AVPlayerItem)
+    }
 
     public struct Image {
         public var previewImage: UIImage?
@@ -36,18 +43,18 @@ public enum GalleryMedia {
     }
 
     public struct Video {
-        public var url: URL?
+        public var source: VideoSource?
         public var previewImage: UIImage?
         public var previewImageLoader: PreviewImageLoader?
         public var videoLoader: VideoLoader?
 
         public init(
-            url: URL? = nil,
+            source: VideoSource? = nil,
             previewImage: UIImage? = nil,
             previewImageLoader: PreviewImageLoader? = nil,
             videoLoader: VideoLoader? = nil
         ) {
-            self.url = url
+            self.source = source
             self.previewImage = previewImage
             self.previewImageLoader = previewImageLoader
             self.videoLoader = videoLoader
