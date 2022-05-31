@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol GalleryZoomTransitionDelegate: class {
+public protocol GalleryZoomTransitionDelegate: AnyObject {
     var zoomTransition: GalleryZoomTransition? { get }
     var zoomTransitionInteractionController: UIViewControllerInteractiveTransitioning? { get }
 

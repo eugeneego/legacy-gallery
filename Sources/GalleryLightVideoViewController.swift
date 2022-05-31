@@ -191,7 +191,7 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
     }
 
     @objc private func playbackEnded(_ notification: Notification) {
-        (notification.object as? AVPlayerItem)?.seek(to: .zero)
+        (notification.object as? AVPlayerItem)?.seek(to: .zero, completionHandler: nil)
         if !loop {
             pause()
         }

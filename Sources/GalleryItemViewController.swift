@@ -46,7 +46,6 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
         modalPresentationStyle = .fullScreen
 
         extendedLayoutIncludesOpaqueBars = true
-        automaticallyAdjustsScrollViewInsets = false
 
         view.backgroundColor = .black
     }
@@ -72,7 +71,7 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
     public let titleView: UIView = UIView()
     public let closeButton: UIButton = UIButton(type: .custom)
     public let shareButton: UIButton = UIButton(type: .custom)
-    public let loadingIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
+    public let loadingIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(style: .large)
     public let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer()
 
     internal var statusBarHidden: Bool = false
@@ -237,7 +236,12 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
         transition.shouldStartInteractiveTransition = { [weak self] in
             guard let self = self else { return true }
 
-            let orientation: UInt = 1 << UIApplication.shared.statusBarOrientation.rawValue
+            let currentOrientation = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .map(\.interfaceOrientation)
+                .first
+                ?? .portrait
+            let orientation: UInt = 1 << currentOrientation.rawValue
             let supportedOrientations = self.presenterInterfaceOrientations?()
                 ?? self.presentingViewController?.supportedInterfaceOrientations
                 ?? .portrait
@@ -256,10 +260,8 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
             self?.view
         }
         transition.completion = { [weak self] _ in
-            guard let self = self else { return }
-
-            self.transition.interactive = false
-            self.isTransitioning = false
+            self?.transition.interactive = false
+            self?.isTransitioning = false
         }
         view.addGestureRecognizer(transition.panGestureRecognizer)
         transition.panGestureRecognizer.isEnabled = isTransitionEnabled
@@ -297,16 +299,15 @@ open class GalleryItemViewController: UIViewController, GalleryZoomTransitionDel
         if mediaSize.width > 0.1 && mediaSize.height > 0.1 {
             let imageRatio = mediaSize.height / mediaSize.width
             let viewRatio = viewSize.height / viewSize.width
-
             result.size = imageRatio <= viewRatio
                 ? CGSize(
-                width: viewSize.width,
-                height: (viewSize.width * (mediaSize.height / mediaSize.width)).rounded(.toNearestOrAwayFromZero)
-            )
+                    width: viewSize.width,
+                    height: (viewSize.width * (mediaSize.height / mediaSize.width)).rounded(.toNearestOrAwayFromZero)
+                )
                 : CGSize(
-                width: (viewSize.height * (mediaSize.width / mediaSize.height)).rounded(.toNearestOrAwayFromZero),
-                height: viewSize.height
-            )
+                    width: (viewSize.height * (mediaSize.width / mediaSize.height)).rounded(.toNearestOrAwayFromZero),
+                    height: viewSize.height
+                )
             result.origin = CGPoint(
                 x: (viewSize.width / 2 - result.size.width / 2).rounded(.toNearestOrAwayFromZero),
                 y: (viewSize.height / 2 - result.size.height / 2).rounded(.toNearestOrAwayFromZero)
