@@ -141,28 +141,27 @@ open class GalleryImageViewController: GalleryItemViewController, UIScrollViewDe
 
         loadingIndicatorView.startAnimating()
 
-        fullImageLoader { [weak self] result in
+        Task { [weak self] in
+            let result = await fullImageLoader()
+
             guard let self = self else { return }
 
             self.loadingIndicatorView.stopAnimating()
 
-            switch result {
-                case .success(let image):
-                    self.fullImage = image
-                    self.addFadeTransition(view: self.imageView)
-                    self.imageView.image = image
+            if case .success(let image) = result {
+                self.fullImage = image
+                self.addFadeTransition(view: self.imageView)
+                self.imageView.image = image
 
-                    let size = image.size
-                    let widthDiff = abs(self.mediaSize.width - size.width)
-                    let heightDiff = abs(self.mediaSize.height - size.height)
-                    let equal = widthDiff < 0.1 && heightDiff < 0.1
-                    if !equal {
-                        self.mediaSize = size
-                        self.scrollSize = self.scrollView.frame.size
-                        self.setupScrollView(with: self.scrollSize)
-                    }
-                case .failure:
-                    break
+                let size = image.size
+                let widthDiff = abs(self.mediaSize.width - size.width)
+                let heightDiff = abs(self.mediaSize.height - size.height)
+                let equal = widthDiff < 0.1 && heightDiff < 0.1
+                if !equal {
+                    self.mediaSize = size
+                    self.scrollSize = self.scrollView.frame.size
+                    self.setupScrollView(with: self.scrollSize)
+                }
             }
 
             self.updateControls()

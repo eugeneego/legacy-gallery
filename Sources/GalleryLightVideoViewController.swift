@@ -118,17 +118,11 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
             load(source: source)
         } else if let videoLoader = video.videoLoader {
             loadingIndicatorView.startAnimating()
-
-            videoLoader { [weak self] result in
-                guard let self = self else { return }
-
-                self.loadingIndicatorView.stopAnimating()
-
-                switch result {
-                    case .success(let source):
-                        self.load(source: source)
-                    case .failure:
-                        break
+            Task { [weak self] in
+                let result = await videoLoader()
+                self?.loadingIndicatorView.stopAnimating()
+                if case .success(let source) = result {
+                    self?.load(source: source)
                 }
             }
         }
@@ -202,16 +196,12 @@ open class GalleryLightVideoViewController: GalleryItemViewController {
             previewImageView.image = previewImage
             mediaSize = previewImage.size
         } else if let previewImageLoader = video.previewImageLoader {
-            previewImageLoader(.zero) { [weak self] result in
-                guard let self = self else { return }
-
-                switch result {
-                    case .success(let image):
-                        self.previewImage = image
-                        self.previewImageView.image = image
-                        self.mediaSize = image.size
-                    case .failure:
-                        break
+            Task { [weak self] in
+                let result = await previewImageLoader(.zero)
+                if case .success(let image) = result {
+                    self?.previewImage = image
+                    self?.previewImageView.image = image
+                    self?.mediaSize = image.size
                 }
             }
         }

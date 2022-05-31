@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 open class GalleryPreviewCollectionCell: GalleryBasePreviewCollectionCell {
     public let imageView: UIImageView = UIImageView()
@@ -84,14 +85,10 @@ open class GalleryPreviewCollectionCell: GalleryBasePreviewCollectionCell {
         if let image = image {
             imageView.image = image
         } else if let loader = loader {
-            loader(imageView.bounds.size) { [weak self] result in
-                guard let self = self, self.imageId == uuid else { return }
-
-                switch result {
-                    case .success(let image):
-                        self.imageView.image = image
-                    case .failure:
-                        break
+            Task { [weak self] in
+                let result = await loader(imageView.bounds.size)
+                if self?.imageId == uuid, case .success(let image) = result {
+                    self?.imageView.image = image
                 }
             }
         }

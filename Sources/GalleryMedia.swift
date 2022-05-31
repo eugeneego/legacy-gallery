@@ -13,9 +13,9 @@ public enum GalleryMedia {
     case image(Image)
     case video(Video)
 
-    public typealias PreviewImageLoader = (_ size: CGSize, _ completion: @escaping (Result<UIImage, Error>) -> Void) -> Void
-    public typealias FullImageLoader = (_ completion: @escaping (Result<UIImage, Error>) -> Void) -> Void
-    public typealias VideoLoader = (_ completion: @escaping (Result<VideoSource, Error>) -> Void) -> Void
+    public typealias PreviewImageLoader = (_ size: CGSize) async -> Result<UIImage, Error>
+    public typealias FullImageLoader = () async -> Result<UIImage, Error>
+    public typealias VideoLoader = () async -> Result<VideoSource, Error>
 
     public enum VideoSource {
         case url(URL)
