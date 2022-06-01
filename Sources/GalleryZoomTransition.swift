@@ -59,18 +59,18 @@ open class GalleryZoomTransition: NSObject,
 
         // Getting view controllers and views
 
-        guard
-            let toVC = transitionContext.viewController(forKey: .to),
-            let fromView = transitionContext.view(forKey: .from),
-            let toView = transitionContext.view(forKey: .to)
-        else { return }
+        guard let toViewController = transitionContext.viewController(forKey: .to) else { return }
 
-        let toFinalFrame = transitionContext.finalFrame(for: toVC)
-
+        let fromView = transitionContext.view(forKey: .from)
+        let toView = transitionContext.view(forKey: .to)
         let containerView = transitionContext.containerView
 
-        toView.frame = toFinalFrame
-        containerView.addSubview(toView)
+        let toFinalFrame = transitionContext.finalFrame(for: toViewController)
+
+        toView?.frame = toFinalFrame
+        if let toView = toView {
+            containerView.addSubview(toView)
+        }
 
         // Getting animating view and destination frame after applying frames to views
 
@@ -82,15 +82,15 @@ open class GalleryZoomTransition: NSObject,
         else { return }
 
         let animatingFrame = containerView.convert(semiAnimatingFrame ?? animatingView.frame, from: fromView)
-        animatingView.transform = fromView.transform
+        animatingView.transform = fromView?.transform ?? .identity
         animatingView.frame = animatingFrame
         containerView.addSubview(animatingView)
 
         sourceTransition?.zoomTransitionHideViews(hide: true)
         destinationTransition?.zoomTransitionHideViews(hide: true)
 
-        fromView.alpha = 1
-        toView.alpha = 0
+        fromView?.alpha = 1
+        toView?.alpha = 0
 
         animationSetup?(animatingView)
 
@@ -99,8 +99,8 @@ open class GalleryZoomTransition: NSObject,
                 animatingView.transform = .identity
                 animatingView.frame = destinationFrame
 
-                fromView.alpha = 0
-                toView.alpha = 1
+                fromView?.alpha = 0
+                toView?.alpha = 1
 
                 self.animation?(animatingView, self.zoomDuration)
             },
@@ -133,8 +133,8 @@ open class GalleryZoomTransition: NSObject,
 
         let fromViewController: UIViewController
         let toViewController: UIViewController
-        let fromView: UIView
-        let toView: UIView
+        let fromView: UIView?
+        let toView: UIView?
 
         var animatingView: UIView
         var animatingViewInitialPosition: CGPoint = .zero
@@ -149,38 +149,40 @@ open class GalleryZoomTransition: NSObject,
         guard interactive else { return }
 
         guard
-            let fromVC = transitionContext.viewController(forKey: .from),
-            let toVC = transitionContext.viewController(forKey: .to),
-            let fromView = transitionContext.view(forKey: .from),
-            let toView = transitionContext.view(forKey: .to)
+            let fromViewController = transitionContext.viewController(forKey: .from),
+            let toViewController = transitionContext.viewController(forKey: .to)
         else { return }
 
-        let toFinalFrame = transitionContext.finalFrame(for: toVC)
-
+        let fromView = transitionContext.view(forKey: .from)
+        let toView = transitionContext.view(forKey: .to)
         let containerView = transitionContext.containerView
 
-        toView.frame = toFinalFrame
-        containerView.insertSubview(toView, belowSubview: fromView)
+        let toFinalFrame = transitionContext.finalFrame(for: toViewController)
+
+        toView?.frame = toFinalFrame
+        if let toView = toView, let fromView = fromView {
+            containerView.insertSubview(toView, belowSubview: fromView)
+        }
 
         // Getting animating view after applying frames to views
 
         guard let animatingView = sourceTransition?.zoomTransitionAnimatingView else { return }
 
         let animatingFrame = containerView.convert(animatingView.frame, from: fromView)
-        animatingView.transform = fromView.transform
+        animatingView.transform = fromView?.transform ?? .identity
         animatingView.frame = animatingFrame
         containerView.addSubview(animatingView)
 
         sourceTransition?.zoomTransitionHideViews(hide: true)
         destinationTransition?.zoomTransitionHideViews(hide: true)
 
-        fromView.alpha = 1
-        toView.alpha = 0
+        fromView?.alpha = 1
+        toView?.alpha = 0
 
         interactiveTransitionContext = InteractiveTransitionContext(
             transitionContext: transitionContext,
-            fromViewController: fromVC,
-            toViewController: toVC,
+            fromViewController: fromViewController,
+            toViewController: toViewController,
             fromView: fromView,
             toView: toView,
             animatingView: animatingView,
@@ -189,7 +191,7 @@ open class GalleryZoomTransition: NSObject,
             progressDistance: containerView.bounds.height / 2
         )
 
-        // Complete the transition if gesture is currently ended
+        // Complete the transition if gesture was ended
         if isEnded {
             if !shouldComplete {
                 cancel()
@@ -213,13 +215,13 @@ open class GalleryZoomTransition: NSObject,
         )
         context.animatingView.center = center
 
-        context.fromView.alpha = 1 - progress
-        context.toView.alpha = progress
+        context.fromView?.alpha = 1 - progress
+        context.toView?.alpha = progress
 
         context.progress = progress
         context.transitionContext.updateInteractiveTransition(progress)
 
-        self.interactiveTransitionContext = context
+        interactiveTransitionContext = context
     }
 
     open func finish() {
@@ -245,8 +247,8 @@ open class GalleryZoomTransition: NSObject,
                     context.animatingView.frame = destinationFrame
                 }
 
-                context.fromView.alpha = 0
-                context.toView.alpha = 1
+                context.fromView?.alpha = 0
+                context.toView?.alpha = 1
 
                 self.animation?(context.animatingView, self.zoomDuration)
             },
@@ -275,8 +277,8 @@ open class GalleryZoomTransition: NSObject,
             animations: {
                 context.animatingView.center = context.animatingViewInitialPosition
 
-                context.fromView.alpha = 1
-                context.toView.alpha = 0
+                context.fromView?.alpha = 1
+                context.toView?.alpha = 0
             },
             completion: { _ in
                 self.sourceTransition?.zoomTransitionHideViews(hide: false)
@@ -331,7 +333,7 @@ open class GalleryZoomTransition: NSObject,
 
         semiContext.progress = progress
 
-        self.semiInteractiveTransitionContext = semiContext
+        semiInteractiveTransitionContext = semiContext
     }
 
     private func finishSemiInteractiveTransition() {
